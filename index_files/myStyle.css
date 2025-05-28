@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+body,td,th {
+	font-family: "Open Sans", sans-serif;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+a {
+	color: #660033;
+}
+
+h1 {
+	line-height: 40px;
+	font-size: 30px;
+	font-family: Helvetica, Georgia, Times, sans-serif
+}
+h2 {
+	color: #000000 ;
+	font-family: Helvetica, Georgia, Times, sans-serif;
+	font-size: 20px;
+	margin-top: 0.7em;
+	margin-bottom: 0.3em;
+	padding-bottom: 0.2em;
+	line-height: 1.0;
+	padding-top: 0.5em;
+	border-bottom: 1px solid #aaaaaa;
+}
+
+p,ul {
+  	  font-family: Helvetica, Georgia, Times, serif;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+li {
+margin-top: 0.2em;
+margin-bottom: 0.2em;
+}
+table.dataSet {
+    border: 2px solid grey;
+    border-collapse: collapse;
+}
+	
