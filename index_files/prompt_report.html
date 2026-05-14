@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pipeline Prompt Report — Run 20260325_125457</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #f5f4f0;
+      padding: 32px 16px;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .report-header {
+      background: #1a1a1a;
+      color: #fff;
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .report-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 12px;
+    }
+    .report-header .meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .meta-item .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #888;
+    }
+    .meta-item .value {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    /* Section cards */
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      border: 1px solid #e8e6e0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0ede8;
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: #faf9f7; }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      flex: 1;
+      color: #1a1a1a;
+    }
+
+    .section-header .tagline {
+      font-size: 12px;
+      color: #888;
+      font-style: italic;
+      flex: 2;
+    }
+
+    .section-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Blocks inside sections */
+    .block-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    li { color: #333; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+    .info-box {
+      background: #f9f8f6;
+      border: 1px solid #e8e6e0;
+      border-radius: 7px;
+      padding: 14px 16px;
+    }
+    .info-box p { color: #444; font-size: 13px; }
+
+    /* Violation / warning box */
+    .violation-box {
+      background: #fff8f0;
+      border: 1px solid #f0d8b0;
+      border-left: 4px solid #e8922a;
+      border-radius: 7px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #7a4a10;
+    }
+    .violation-box strong { color: #c0620a; }
+
+    /* Gaps / notes box */
+    .note-box {
+      background: #f0f4ff;
+      border: 1px solid #c8d8f8;
+      border-left: 4px solid #4a7adf;
+      border-radius: 7px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #2a3a6a;
+    }
+
+    /* Asset pills */
+    .asset-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .asset-pill {
+      background: #f2f0eb;
+      border: 1px solid #dedad2;
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      color: #333;
+      white-space: nowrap;
+    }
+    .asset-pill .cat {
+      color: #888;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+    .asset-pill .price {
+      color: #4a7a4a;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+
+    /* Budget bar */
+    .budget-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .budget-bar-track {
+      height: 8px;
+      background: #e8e6e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .budget-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4a7a4a, #7ab87a);
+      border-radius: 4px;
+    }
+    .budget-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+    }
+    .budget-bar-labels strong { color: #1a1a1a; }
+
+    /* Code block */
+    pre {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      border-radius: 7px;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+    code {
+      font-family: "SF Mono", "Fira Code", monospace;
+      background: #f0ede8;
+      color: #c0442a;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+
+    /* Layout table */
+    .layout-table {
+      width: 100%;
+      font-size: 12px;
+      font-family: "SF Mono", "Fira Code", monospace;
+      border-collapse: collapse;
+    }
+    .layout-table th {
+      text-align: left;
+      padding: 6px 10px;
+      background: #f2f0eb;
+      color: #666;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #dedad2;
+    }
+    .layout-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #f0ede8;
+      color: #333;
+    }
+    .layout-table tr:last-child td { border-bottom: none; }
+
+    /* Score table */
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .score-table th {
+      text-align: center;
+      padding: 8px 12px;
+      background: #f2f0eb;
+      color: #666;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #dedad2;
+    }
+    .score-table th:first-child { text-align: left; }
+    .score-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #f0ede8;
+      text-align: center;
+      color: #444;
+    }
+    .score-table td:first-child { text-align: left; font-family: "SF Mono", "Fira Code", monospace; font-size: 12px; color: #333; }
+    .score-table tr:last-child td { border-bottom: none; }
+    .score-table tr.best td { background: #f4faf4; }
+
+    .score-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 22px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .score-chip.high { background: #dff0df; color: #2a6a2a; }
+    .score-chip.mid  { background: #fff3d0; color: #7a5a00; }
+    .score-chip.low  { background: #fde8e8; color: #8a2a2a; }
+
+    .geomean {
+      font-weight: 700;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    /* Score comments */
+    .score-comments {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .score-comment-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 13px;
+    }
+    .score-dim {
+      min-width: 120px;
+      font-weight: 600;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .score-comment-row p { color: #444; line-height: 1.5; }
+
+    /* Solver API list */
+    .solver-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      list-style: none;
+      padding: 0;
+    }
+    .solver-list li {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      font-size: 13px;
+    }
+    .solver-list li code { white-space: nowrap; }
+
+    /* Tiers */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 500px) { .tier-grid { grid-template-columns: 1fr; } }
+    .tier-card {
+      background: #f9f8f6;
+      border: 1px solid #e8e6e0;
+      border-radius: 7px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .tier-card .tier-name { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .tier-card .tier-cap { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+    .tier-card .tier-pct { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="report-header">
+    <h1>Pipeline Prompt Report &mdash; Run 20260325_125457</h1>
+    <div class="meta">
+      <div class="meta-item">
+        <span class="label">Intent</span>
+        <span class="value">create modern minimalist living room layout</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Room</span>
+        <span class="value">3.71m &times; 5.49m &mdash; 19.68 sqm</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Budget</span>
+        <span class="value">$5,000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. select_assets -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">1</div>
+      <h2>select_assets</h2>
+      <span class="tagline">Select furniture assets matching the user's style and design vision</span>
+    </div>
+    <div class="section-body">
+
+      <div>
+        <div class="block-label">Budget Allocation</div>
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-name">Sofa / anchor</div>
+            <div class="tier-cap">$2,500</div>
+            <div class="tier-pct">50%</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Chairs, tables &amp; storage</div>
+            <div class="tier-cap">$1,750</div>
+            <div class="tier-pct">35%</div>
+          </div>
+          <div class="tier-card">
+            <div class="tier-name">Lamps &amp; accents</div>
+            <div class="tier-cap">$750</div>
+            <div class="tier-pct">15%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="block-label">Constraints</div>
+          <div class="info-box">
+            <ul>
+              <li>Total cost target: $5,000 (up to $5,500, +10%)</li>
+              <li>Total footprint &le; 19.68 sqm (width &times; depth &times; 2)</li>
+              <li>No single item may exceed $2,750</li>
+              <li>TV excluded from budget</li>
+              <li>Must call <code>validate_selection</code></li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block-label">Strategy</div>
+          <div class="info-box">
+            <ul>
+              <li>Select sofa/anchor piece <strong>FIRST</strong></li>
+              <li>Primary: aesthetic coherence (color, style, shape)</li>
+              <li>Small room + large budget &rarr; higher-quality pieces</li>
+              <li>Duplicates allowed (e.g. 2&times; accent_chair)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block-label">Process</div>
+        <ol>
+          <li>Select sofa first, build selection around its style</li>
+          <li>Call <code>validate_selection</code></li>
+          <li>If invalid: fix (drop least relevant / swap smaller), re-validate</li>
+          <li>If valid but &gt;30% budget unused: upgrade or add accents, re-validate</li>
+        </ol>
+      </div>
+
+      <div>
+        <div class="block-label">Output Format</div>
+        <pre><code>{
+  "selected_assets": [{"uid": "...", "reason": "Metadata match: color=X, style=X. Purpose: ..."}],
+  "total_cost": number,
+  "total_footprint_sqm": number,
+  "selection_strategy": {
+    "summary": "...",
+    "higher_budget_additions": "...",
+    "lower_budget_savings": "...",
+    "gaps": "...",
+    "conflict": "..."
+  }
+}</code></pre>
+      </div>
+
+      <div>
+        <div class="block-label">Selected Assets</div>
+        <div class="budget-bar-wrap" style="margin-bottom:12px">
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill" style="width: 71.9%"></div>
+          </div>
+          <div class="budget-bar-labels">
+            <span><strong>$3,594.97</strong> spent</span>
+            <span>$5,000 budget &mdash; <strong>71.9% used</strong></span>
+          </div>
+        </div>
+        <div class="asset-grid">
+          <span class="asset-pill">sofa_133 <span class="cat">sofa</span><span class="price">$1,299</span></span>
+          <span class="asset-pill">tv_stand_55 <span class="cat">tv_stand</span><span class="price">$118</span></span>
+          <span class="asset-pill">tv_15 <span class="cat">tv</span><span class="price">$498</span></span>
+          <span class="asset-pill">rugs_33 <span class="cat">rug</span><span class="price">$1,299</span></span>
+          <span class="asset-pill">coffee_table_271 <span class="cat">coffee_table</span><span class="price">$449</span></span>
+          <span class="asset-pill">accent_chair_12 <span class="cat">&times;2 accent_chair</span><span class="price">$189.99 ea.</span></span>
+          <span class="asset-pill">floor_lamps_8 <span class="cat">floor_lamp</span><span class="price">$49.99</span></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="block-label">Strategy Summary</div>
+        <p style="color:#444;font-size:13px">Modern minimalist palette of creams, whites, and light woods. Curved bouclé sofa as the organic anchor; concrete coffee table and light oak TV stand for clean-lined support.</p>
+      </div>
+
+      <div class="note-box">
+        <strong>Gap:</strong> tv_stand_55 is light oak instead of off-white &mdash; no high-end off-white stands were available within tier constraints while maintaining minimalist style.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. initial_layout -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">2</div>
+      <h2>initial_layout</h2>
+      <span class="tagline">Generate a 2D furniture layout for this room</span>
+    </div>
+    <div class="section-body">
+
+      <div class="two-col">
+        <div>
+          <div class="block-label">Room &amp; Coordinate System</div>
+          <div class="info-box">
+            <ul>
+              <li>Origin (0,0) bottom-left, +X right, +Y up</li>
+              <li>Bounds: x=[0, 3.71], y=[0, 5.49]</li>
+              <li>Walls: 0=right, 1=top, 2=left, 3=bottom</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="block-label">Voids (0.6m clearance)</div>
+          <div class="info-box">
+            <ul>
+              <li>door_0: center=[-0.05, 5.01], 0.82&times;0.82m</li>
+              <li>window-0: center=[3.80, 4.83], 0.08&times;1.06m</li>
+              <li>window-1: center=[1.80, -0.09], 1.58&times;0.08m</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="block-label">Assets to Place (8)</div>
+        <div class="asset-grid">
+          <span class="asset-pill">sofa_133 <span class="cat">2.40&times;0.85&times;0.69m</span></span>
+          <span class="asset-pill">tv_stand_55 <span class="cat">1.65&times;0.39&times;0.41m</span></span>
+          <span class="asset-pill">coffee_table_271 <span class="cat">0.86&times;0.86&times;0.38m</span></span>
+          <span class="asset-pill">rugs_33 <span class="cat">2.40&times;3.00&times;0.01m</span></span>
+          <span class="asset-pill">accent_chair_12_1 <span class="cat">0.78&times;0.78&times;0.83m</span></span>
+          <span class="asset-pill">accent_chair_12_2 <span class="cat">0.78&times;0.78&times;0.83m</span></span>
+          <span class="asset-pill">floor_lamps_8 <span class="cat">0.28&times;0.28&times;1.44m</span></span>
+          <span class="asset-pill">tv_15 <span class="cat">1.45&times;0.32&times;0.89m</span></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="block-label">Key Rules</div>
+        <ul>
+          <li>All assets within bounds, no overlaps, 0.6m clearance from voids</li>
+          <li>Wall-aligned (<code>sofa_133</code>, <code>tv_stand_55</code>): flush to wall, wall-parallel rotation, never diagonal</li>
+          <li>z=0 for floor items; stackable items (tv, lamp) z=surface height</li>
+          <li>Output: JSON array with exactly 8 items, ordered rugs &rarr; floor furniture &rarr; stacked &rarr; wall-mounted</li>
+          <li>Few-shot BAD/GOOD examples provided in prompt</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. fix_collisions -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">3</div>
+      <h2>fix_collisions</h2>
+      <span class="tagline">Fix the placement issues in this room layout</span>
+    </div>
+    <div class="section-body">
+
+      <div>
+        <div class="block-label">Current Layout</div>
+        <table class="layout-table">
+          <thead>
+            <tr><th>Asset</th><th>Position</th><th>Size</th><th>rot_z</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>sofa_133</td><td>[1.85, 5.06]</td><td>2.40&times;0.85m</td><td>0.00 rad</td></tr>
+            <tr><td>tv_stand_55</td><td>[1.85, 0.20]</td><td>1.65&times;0.39m</td><td>3.14 rad</td></tr>
+            <tr><td>coffee_table_271</td><td>[1.85, 2.74]</td><td>0.86&times;0.86m</td><td>0.00 rad</td></tr>
+            <tr><td>accent_chair_12_1</td><td>[0.50, 2.74]</td><td>0.78&times;0.78m</td><td>1.57 rad</td></tr>
+            <tr><td>accent_chair_12_2</td><td>[3.20, 2.74]</td><td>0.78&times;0.78m</td><td>4.71 rad</td></tr>
+            <tr><td>floor_lamps_8</td><td>[0.30, 4.80]</td><td>0.28&times;0.28m</td><td>0.00 rad</td></tr>
+            <tr><td>tv_15</td><td>[1.85, 0.20]</td><td>1.45&times;0.32m</td><td>3.14 rad</td></tr>
+            <tr><td>rugs_33</td><td>[1.86, 2.74]</td><td>2.40&times;3.00m</td><td>0.00 rad</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="violation-box">
+        <strong>DOOR BLOCKED:</strong> floor_lamps_8 is blocking door #0 at center=[-0.05, 5.01]
+      </div>
+
+      <div>
+        <div class="block-label">Rules</div>
+        <ul>
+          <li>Position is asset center &mdash; keep half-width/half-depth margin from walls</li>
+          <li>Clear door zones &mdash; no furniture in door clearance areas</li>
+          <li>Avoid creating new overlaps when fixing</li>
+          <li>Prefer minimal moves</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Action:</strong> Call <code>move_assets</code> with fixes, then <code>validate_layout</code> to verify.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. refine_realism -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">4</div>
+      <h2>refine_realism</h2>
+      <span class="tagline">Refine layout for realism and aesthetic quality</span>
+    </div>
+    <div class="section-body">
+
+      <div>
+        <div class="block-label">Current Layout (post-fix)</div>
+        <table class="layout-table">
+          <thead>
+            <tr><th>Asset</th><th>Position</th><th>rot_z</th><th>Size</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>sofa_133</td><td>[1.85, 5.06, 0.00]</td><td>0.00 rad</td><td>2.40&times;0.85&times;0.69m</td></tr>
+            <tr><td>tv_stand_55</td><td>[1.85, 0.20, 0.00]</td><td>3.14 rad</td><td>1.65&times;0.39&times;0.41m</td></tr>
+            <tr><td>coffee_table_271</td><td>[1.85, 2.74, 0.00]</td><td>0.00 rad</td><td>0.86&times;0.86&times;0.38m</td></tr>
+            <tr><td>accent_chair_12_1</td><td>[0.50, 2.74, 0.00]</td><td>1.57 rad</td><td>0.78&times;0.78&times;0.83m</td></tr>
+            <tr><td>accent_chair_12_2</td><td>[3.20, 2.74, 0.00]</td><td>4.71 rad</td><td>0.78&times;0.78&times;0.83m</td></tr>
+            <tr><td>floor_lamps_8</td><td>[3.40, 4.80, 0.00]</td><td>0.00 rad</td><td>0.28&times;0.28&times;1.44m</td></tr>
+            <tr><td>tv_15</td><td>[1.85, 0.20, 0.41]</td><td>3.14 rad</td><td>1.45&times;0.32&times;0.89m</td></tr>
+            <tr><td>rugs_33</td><td>[1.86, 2.74, 0.00]</td><td>0.00 rad</td><td>2.40&times;3.00&times;0.01m</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="block-label">Refinement Goals</div>
+        <ol>
+          <li><strong>Conversation groupings:</strong> sofas + coffee tables + chairs form coherent areas; seating faces focal points (TV)</li>
+          <li><strong>Traffic flow:</strong> natural paths between groups and to doors</li>
+          <li><strong>Functional relationships:</strong> side tables next to seating, lamps near reading areas</li>
+          <li><strong>Visual balance:</strong> matching pieces flanking larger furniture</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. generate_constraints -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">5</div>
+      <h2>generate_constraints</h2>
+      <span class="tagline">Generate solver constraints for the furniture layout</span>
+    </div>
+    <div class="section-body">
+
+      <div>
+        <div class="block-label">Refined Layout (input)</div>
+        <table class="layout-table">
+          <thead>
+            <tr><th>Asset</th><th>Position</th><th>rot_z</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>sofa_133</td><td>[1.85, 5.06, 0.00]</td><td>0.00 rad</td></tr>
+            <tr><td>tv_stand_55</td><td>[1.85, 0.20, 0.00]</td><td>3.14 rad</td></tr>
+            <tr><td>coffee_table_271</td><td>[1.85, 3.30, 0.00]</td><td>0.00 rad</td></tr>
+            <tr><td>rugs_33</td><td>[1.85, 3.10, 0.00]</td><td>0.00 rad</td></tr>
+            <tr><td>accent_chair_12_1</td><td>[0.55, 3.30, 0.00]</td><td>1.20 rad</td></tr>
+            <tr><td>accent_chair_12_2</td><td>[3.15, 3.30, 0.00]</td><td>5.08 rad</td></tr>
+            <tr><td>floor_lamps_8</td><td>[3.40, 5.00, 0.00]</td><td>0.00 rad</td></tr>
+            <tr><td>tv_15</td><td>[1.85, 0.20, 0.41]</td><td>3.14 rad</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="block-label">Solver API</div>
+        <ul class="solver-list">
+          <li><code>solver.against_wall(asset, walls[i])</code> &mdash; asset touches wall i</li>
+          <li><code>solver.on_top_of(a1, a2)</code> &mdash; stack a1 on a2</li>
+          <li><code>solver.align_with(a1, a2, angle=0|180)</code> &mdash; parallel or opposite orientation</li>
+          <li><code>solver.point_towards(a1, a2)</code> &mdash; a1 faces a2</li>
+          <li><code>solver.distance_constraint(a1, a2, min, max, weight=1)</code> &mdash; distance range</li>
+        </ul>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="block-label">Rules</div>
+          <ul>
+            <li>Every asset must have &ge;1 constraint</li>
+            <li>Wall-aligned: use <code>against_wall()</code>, not <code>point_towards()</code></li>
+            <li><code>on_top_of</code>: only stackable items onto valid surfaces</li>
+            <li>No redundant pairs</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-label">Output Format</div>
+          <pre><code>{"constraint_program": "solver calls separated by \n"}</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. score_layout -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge">6</div>
+      <h2>score_layout</h2>
+      <span class="tagline">Score layout quality at each pipeline stage using preview image</span>
+    </div>
+    <div class="section-body">
+
+      <div>
+        <div class="block-label">Scores by Stage</div>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Realism</th>
+              <th>Functionality</th>
+              <th>Layout</th>
+              <th>Completion</th>
+              <th>Geo Mean</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>initial_layout</td>
+              <td><span class="score-chip high">9</span></td>
+              <td><span class="score-chip mid">6</span></td>
+              <td><span class="score-chip low">5</span></td>
+              <td><span class="score-chip mid">7</span></td>
+              <td><span class="geomean">6.59</span></td>
+            </tr>
+            <tr>
+              <td>fix_collisions</td>
+              <td><span class="score-chip high">9</span></td>
+              <td><span class="score-chip mid">7</span></td>
+              <td><span class="score-chip low">5</span></td>
+              <td><span class="score-chip mid">7</span></td>
+              <td><span class="geomean">6.85</span></td>
+            </tr>
+            <tr class="best">
+              <td>refine_realism</td>
+              <td><span class="score-chip high">9</span></td>
+              <td><span class="score-chip mid">7</span></td>
+              <td><span class="score-chip low">5</span></td>
+              <td><span class="score-chip high">8</span></td>
+              <td><span class="geomean">7.09</span></td>
+            </tr>
+            <tr>
+              <td>layoutvlm</td>
+              <td><span class="score-chip mid">6</span></td>
+              <td><span class="score-chip mid">6</span></td>
+              <td><span class="score-chip low">4</span></td>
+              <td><span class="score-chip low">5</span></td>
+              <td><span class="geomean">5.18</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="block-label">Final Stage Comments (refine_realism)</div>
+        <div class="score-comments">
+          <div class="score-comment-row">
+            <div class="score-dim"><span class="score-chip high" style="margin-right:6px">9</span> Realism</div>
+            <p>Furniture placement and rotations are very realistic, following a standard conversational layout with a clear focal point.</p>
+          </div>
+          <div class="score-comment-row">
+            <div class="score-dim"><span class="score-chip mid" style="margin-right:6px">7</span> Functionality</div>
+            <p>All essential living room items present. However, the coffee table is &gt;1.7m from the sofa, making it unreachable for those seated there.</p>
+          </div>
+          <div class="score-comment-row">
+            <div class="score-dim"><span class="score-chip low" style="margin-right:6px">5</span> Layout</div>
+            <p>Large empty gap (~3m) between seating area and TV. Coffee table floating in center rather than serving the sofa.</p>
+          </div>
+          <div class="score-comment-row">
+            <div class="score-dim"><span class="score-chip high" style="margin-right:6px">8</span> Completion</div>
+            <p>Feels complete and adheres well to the minimalist request, though large empty floor space makes it feel slightly sparse.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
