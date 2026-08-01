@@ -1,0 +1,10 @@
+# Plaintext source of the password-protected report — never commit this.
+# Edit this file, then run ./encrypt-report.sh to regenerate eval_report.html.
+eval_report.src.html
+
+# StatiCrypt scratch output
+encrypted/
+decrypted/
+.staticrypt-out/
+
+.DS_Store
